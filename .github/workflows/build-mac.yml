@@ -1,7 +1,10 @@
 name: Build Mac app
 
 on:
-  workflow_dispatch:   # adds a "Run workflow" button in the Actions tab
+  workflow_dispatch:   # "Run workflow" button in the Actions tab
+
+permissions:
+  contents: write      # needed to create a release
 
 jobs:
   build:
@@ -15,8 +18,9 @@ jobs:
       - name: Zip the app
         run: ditto -c -k --keepParent build/Qlix.app Qlix-mac.zip
 
-      - name: Upload
-        uses: actions/upload-artifact@v4
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
         with:
-          name: Qlix-mac
-          path: Qlix-mac.zip
+          tag_name: v1.0.${{ github.run_number }}
+          name: Qlix for Mac v1.0.${{ github.run_number }}
+          files: Qlix-mac.zip
