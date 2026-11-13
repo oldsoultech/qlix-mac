@@ -1,0 +1,22 @@
+name: Build Mac app
+
+on:
+  workflow_dispatch:   # adds a "Run workflow" button in the Actions tab
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Qlix.app
+        run: bash build.sh
+
+      - name: Zip the app
+        run: ditto -c -k --keepParent build/Qlix.app Qlix-mac.zip
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: Qlix-mac
+          path: Qlix-mac.zip
